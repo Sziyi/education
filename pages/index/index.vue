@@ -9,8 +9,8 @@
 				</image>
 			</swiper-item>
 		</swiper>
-		
-		<i-icon-nav></i-icon-nav>
+		<!-- 导航 -->
+		<i-icon-nav :list='iconNav'></i-icon-nav>
 	</view>
 </template>
 
@@ -22,7 +22,32 @@
 					src: "/static/demo/banner/banner1.png"
 				}, {
 					src: "/static/demo/banner/banner2.png"
-				}]
+				}],
+					iconNav:[{
+									src:"/static/demo/icon/hd.png",
+									name:"活动",
+								},{ 
+									src:"/static/demo/icon/test.png",
+									name:"考试",
+								},{
+									src:"/static/demo/icon/ms.png",
+									name:"秒杀",
+								},{
+									src:"/static/demo/icon/pt.png",
+									name:"拼团",
+								},{
+									src:"/static/demo/icon/course.png",
+									name:"直播",
+								},{
+									src:"/static/demo/icon/column.png",
+									name:"专栏",
+								},{
+									src:"/static/demo/icon/book.png",
+									name:"电子书",
+								},{
+									src:"/static/demo/icon/ask.png",
+									name:"社区",
+								}]
 			}
 		},
 		onLoad() {
