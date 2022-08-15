@@ -1,9 +1,16 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
+		<!-- 搜索框 -->
+		<i-search-bar></i-search-bar>
+		<!-- 轮播图 -->
+		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" style="height: 310rpx;">
+			<swiper-item class="flex justify-center" v-for="(item,index) in swiper" :key="index">
+				<image :src="item.src" mode="aspectFill" style="width: 720rpx;height: 300rpx;" class="rounded shadow">
+				</image>
+			</swiper-item>
+		</swiper>
+		
+		<i-icon-nav></i-icon-nav>
 	</view>
 </template>
 
@@ -11,7 +18,11 @@
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				swiper: [{
+					src: "/static/demo/banner/banner1.png"
+				}, {
+					src: "/static/demo/banner/banner2.png"
+				}]
 			}
 		},
 		onLoad() {
@@ -24,29 +35,5 @@
 </script>
 
 <style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
 
-	.logo {
-		height: 200rpx;
-		width: 200rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50rpx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
-	}
 </style>

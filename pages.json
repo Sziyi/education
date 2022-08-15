@@ -18,7 +18,25 @@
 			"style": {
 			}
 		}
-	],
+	    ,{
+            "path" : "components/i-search-bar/i-search-bar",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "components/i-icon-nav/i-icon-nav",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "积云在线教育",
