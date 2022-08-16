@@ -11,11 +11,17 @@
 		{
 			"path": "pages/learn/learn",
 			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		},
 		{
 			"path": "pages/my/my",
 			"style": {
+				"app-plus": {
+					"titleNView": false
+				}
 			}
 		}
 	    ,{
@@ -36,10 +42,37 @@
             }
             
         }
+        ,{
+            "path" : "components/i-coupon-list/i-coupon-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "components/i-spellBall-list/i-spellBall-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "components/i-latest-list/i-latest-list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "积云在线教育",
+		"navigationBarTitleText": "在线教育",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
