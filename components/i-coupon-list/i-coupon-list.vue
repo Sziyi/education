@@ -1,13 +1,14 @@
 <template>
 	<view class="p-2">
-		<scroll-view scroll-x="true" class="scroll-row">
-			<view v-for="i in list" :key="i" class="coupon">
+		<scroll-view class="scroll-row" scroll-x="true" >
+			<view class="coupon" v-for="(item,index) in data" :key="index">
 				<view>
-					<text>￥{{i.price}}</text>
-					<text class="font">
-					<text class="font1" v-html="i.type=='column'?'适用专栏':'适用课程'"></text>：{{i.value.title}}</text>
+					<text>￥{{item.price}}</text>
+					<view>
+						<text class="font"  v-html="item.type=='column'?'适用专栏':'适用课程'"></text><text>:{{item.value.title}}</text>
+					</view>
 				</view>
-				<view hover-class="bg-hover-warning">
+				<view>
 					领取
 				</view>
 			</view>
@@ -17,47 +18,43 @@
 
 <script>
 	export default {
-		name: "coupon-list",
-		props:['list'],
+		name:"i-coupon-list",
+		props : {
+			data : {
+				type : Array,
+				default : () => []
+			}
+		},
 		data() {
 			return {
 				
 			};
-		},
-		onLoad() {
-
-		},
-		methods: {}
+		}
 	}
 </script>
 
 <style>
-	.coupon {
-		width: 500rpx;
+	.coupon{
 		display: inline-flex;
-		color: #ffffff;
+		min-width: 310rpx;
+		color : #fff;
 		margin-right: 30rpx;
 	}
-
-	.coupon>view:first-child {
+	.coupon > view:first-child{
 		padding: 20rpx 30rpx;
 		background-color: #d39e00;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		border-right: 4rpx dashed;
-	}
-
-	.coupon>view:last-child {
+		border-right: 4rpx dashed #fff;
+	} 
+	.coupon > view:last-child{
 		width: 120rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background-color: #ffc107;
-		font-size: 30rpx !important;
-	}
-	.font1{
-		font-size: 20rpx;
+		font-size: 30rpx!important;
 	}
 </style>

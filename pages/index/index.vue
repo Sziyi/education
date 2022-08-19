@@ -1,171 +1,127 @@
 <template>
-	<view class="content">
-		<!-- 搜索框 -->
-		<i-search-bar></i-search-bar>
-		<!-- 轮播图 -->
-		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" style="height: 310rpx;">
-			<swiper-item class="flex justify-center" v-for="(item,index) in swiper" :key="index">
-				<image :src="item.src" mode="aspectFill" style="width: 720rpx;height: 300rpx;" class="rounded shadow">
-				</image>
-			</swiper-item>
-		</swiper>
-		<!-- 导航 -->
-		<i-icon-nav :list='iconNav'></i-icon-nav>
-		<!-- 优惠券 -->
-		<i-coupon-list :list='list'></i-coupon-list>
-		<!-- 拼团 -->
-		<view class="pt px-2">
-			<b>拼团</b>
-		</view>
-		<i-spellBall-list :spellBall="spellBall"></i-spellBall-list>
-		<!-- 最新列表 -->
-		<view class="list px-2">
-			<b>最新列表</b>
-			<text class="r">查看更多</text>
-		</view>
-		<i-latest-list :latest='lat'></i-latest-list>
-		<!-- 底部 -->
-		<view class="fotter">
-			<image src="../../static/demo/cover/1.png" mode=""></image>
+	<view class="container">
+		<index-skeleton v-if="!loadingStatus"></index-skeleton>
+		<view v-else>
+			<block  v-for="(item,index) in template" :key="index">
+				<!-- 搜索框 -->
+				<i-search-bar v-if="item.type === 'search'" :placeholder="item.placeholder"></i-search-bar>
+				
+				<!-- 轮播图 -->
+				<i-swiper v-else-if="item.type === 'swiper'" :data="item.data" @click="handleToDetail"></i-swiper>
+				
+				<!-- 导航栏 -->
+				<i-icon-nav v-else-if="item.type === 'icons'" :data="item.data"></i-icon-nav>
+				
+				<!-- 优惠券 -->
+				<i-coupon-list  v-else-if="item.type === 'coupon'" :data="couponList"></i-coupon-list>
+				
+				<view v-if="item.type === 'coupon'" class="divider"></view>
+				
+				<!-- 拼团 -->
+				<view class="px-2"  v-if="item.type === 'promotion'">
+					<i-list-title><template v-slot:title>{{ item.listType == 'group' ? '拼团' : '秒杀' }}</template></i-list-title>
+					<i-course-list :data="groupOrFlashsale" type="column"></i-course-list>
+				</view>
+				
+				<view  v-if="item.type === 'promotion'" class="divider"></view>
+				
+				<!-- 最新列表 -->
+				<view class="px-2" v-if="item.type === 'list'">
+									<i-list-title>
+										<template v-slot:title>{{item.title}}</template>
+										<template v-slot:sub-title>查看全部</template>
+									</i-list-title>
+									<i-course-list :data="item.data" type="row"></i-course-list>
+								</view>
+				
+				<view v-if="item.type === 'list'" class="divider"></view>
+					
+				<view class="advert" v-if="item.type === 'imageAd'">
+					<image :src="item.data" mode="aspectFill"></image>
+				</view>		
+			</block>
 		</view>
 	</view>
 </template>
 
 <script>
+	import IndexModel from "@/model/indexModel"
+	import indexSkeleton from "@/pages/index/index-skeleton"
 	export default {
 		data() {
 			return {
-				swiper: [{
-					src: "/static/demo/banner/banner1.png"
-				}, {
-					src: "/static/demo/banner/banner2.png"
-				}],
-				iconNav: [{
-					src: "/static/demo/icon/hd.png",
-					name: "活动",
-				}, {
-					src: "/static/demo/icon/test.png",
-					name: "考试",
-				}, {
-					src: "/static/demo/icon/ms.png",
-					name: "秒杀",
-				}, {
-					src: "/static/demo/icon/pt.png",
-					name: "拼团",
-				}, {
-					src: "/static/demo/icon/course.png",
-					name: "直播",
-				}, {
-					src: "/static/demo/icon/column.png",
-					name: "专栏",
-				}, {
-					src: "/static/demo/icon/book.png",
-					name: "电子书",
-				}, {
-					src: "/static/demo/icon/ask.png",
-					name: "社区",
-				}],
-				list: [],
-				spellBall: [],
-				latest: [],
-				lat:[]
+				loadingStatus : false,
+				template : [],
+				couponList: [],
+				groupOrFlashsale: [],
+				listData : {
+					page : 1,
+					usable : 1
+				}
 			}
-
+		},
+		components : {
+			indexSkeleton
 		},
 		onLoad() {
-			this.List()
-			this.spellBallList()
-			this.latestList()
+			this.loadRequest()
+			
+		},
+		onPullDownRefresh(){
+			this.loadRequest()
 		},
 		methods: {
-			List() {
-				uni.request({
-					url: 'http://demonuxtapi.dishait.cn/mobile/coupon',
-					method: "GET",
-					header: {
-						appid: 'bd9d01ecc75dbbaaefce'
-					},
-					success: (res) => {
-						this.list = res.data.data
-						console.log('res', res)
-					},
-					fail: (err) => {
-						console.log(err)
-					}
-				})
+			async loadRequest(){
+				try{
+					await this.getIndexData()
+					await this.getCouponData()
+					await this.getGroupOrFlashsale()
+					this.loadingStatus = true
+					uni.stopPullDownRefresh()
+				}catch(err){
+					uni.stopPullDownRefresh()
+				}
+				
 			},
-			spellBallList() {
-				uni.request({
-					url: 'http://demonuxtapi.dishait.cn/mobile/group',
-					method: "GET",
-					header: {
-						appid: 'bd9d01ecc75dbbaaefce'						
-					},
-					data:{
-						usable: 1,
-						page: 1
-					},
-					success: (res) => {
-						this.spellBall = res.data.data.rows
-						console.log('res', res.data.data.rows)
-					},
-					fail: (err) => {
-						console.log(err)
-					}
-				})
+			
+			/** 点击轮播图跳转到详情页
+			 */
+			handleToDetail(item) {
+				console.log("123",item)
 			},
-			latestList() {
-				uni.request({
-					url: 'http://demonuxtapi.dishait.cn/mobile/group',
-					method: "GET",
-					header: {
-						appid: 'bd9d01ecc75dbbaaefce'
-					},
-					data:{
-						page: 1,
-						usable: 1,
-					},
-					success: (res) => {
-						this.latest = res.data.data.rows
-						this.lat=this.latest.splice(3)
-						console.log('lat', this.lat)
-						console.log('res', res.data.data.rows)
-					},
-					fail: (err) => {
-						console.log(err)
-					}
-				})
+			/**
+			 * 获取首页数据
+			 */
+			async getIndexData(){
+				const response = await IndexModel.getMobileIndex()
+				this.template = response
+				console.log(this.template)
+			},
+			/**
+			 * 获取优惠卷数据
+			 */
+			async getCouponData(){
+				const response = await IndexModel.getMobileICoupon()
+				this.couponList = response
+			},
+			
+			/**
+			 * 获取拼团或者秒杀的数据
+			 */
+			async getGroupOrFlashsale(){
+				const type = this.template.filter(item=> item.type === 'promotion')[0].listType
+				const response = await IndexModel.getMobileActivity(type,this.listData)
+				this.groupOrFlashsale = response.rows
+				// console.log(this.groupOrFlashsale)
 			}
+			
 		}
 	}
 </script>
 
 <style>
-	.pt {
-		height: 100rpx;
-		line-height: 100rpx;
-		font-size: 40rpx;
-		border-top: 15rpx solid #efefef;
-	}
-
-	.list {
-		height: 100rpx;
-		line-height: 100rpx;
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.r {
-		font-size: 26rpx;
-		color: #ccc;
-	}
-	.fotter{
-		width: 100%;
-		height:350rpx;
-		
-	}
-	.fotter image{
-		width: 100%;
-		height: 340rpx;
-	}
+.advert image{
+	width: 100%;
+	height: 340rpx;
+}	
 </style>

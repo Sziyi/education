@@ -95,6 +95,12 @@
 	/* #endif */
 	flex-direction:row!important;
 }
+.inline-flex{
+	/* #ifndef APP-PLUS-NVUE */
+	display:inline-flex!important;
+	/* #endif */
+	flex-direction:row!important;
+}
 .flex-row{ flex-direction:row!important; }
 .flex-column{ flex-direction:column!important; }
 .flex-row-reverse{ flex-direction:row-reverse!important; }
@@ -248,7 +254,7 @@
 .font-smaller { font-size: 15rpx;}
 .font-small { font-size: 20rpx;}
 .font-sm { font-size: 25rpx;}
-.font { font-size: 20rpx!important;}
+.font { font-size: 30rpx!important;}
 .font-md { font-size: 35rpx!important;}
 .font-lg { font-size: 40rpx;}
 .h1{font-size:80rpx; line-height:1.8;}
@@ -440,3 +446,4 @@
 	bottom: 0;
 	z-index: 100;
 }
+
